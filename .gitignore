@@ -63,3 +63,13 @@ target/
 
 # local config files
 config.ini
+
+# Environments
+.env
+.venv
+env/
+venv/
+hbvenv/
+ENV/
+env.bak/
+venv.bak/

@@ -1,6 +1,6 @@
 import argparse
 import os
-from configparser import ConfigParser
+from configparser import SafeConfigParser
 from enum import Enum
 from typing import Dict, Any
 
@@ -25,7 +25,7 @@ class Configuration(object):
     dry_run = False
     description = ''
 
-    def __init__(self, config: Dict[str, Any]=None):
+    def __init__(self, config: Dict[str, Any] = None):
         if not config:
             self.config_file = os.getenv('MONGODB_MIGRATIONS_CONFIG', 'config.ini')
             self._from_ini()
@@ -42,7 +42,7 @@ class Configuration(object):
             self.to_datetime = config.get('to_datetime', None)
             self.dry_run = config.get('dry_run', False)
         # TODO: change to accept url and database for auth_database scenario
-        #if all([self.mongo_url, self.mongo_database]) or not any([self.mongo_url, self.mongo_database]):
+        # if all([self.mongo_url, self.mongo_database]) or not any([self.mongo_url, self.mongo_database]):
         #    raise Exception("Once mongo_url is provided, none of host, port and database can be provided")
 
     def from_console(self):
@@ -74,7 +74,7 @@ class Configuration(object):
         args = self.arg_parser.parse_args()
 
         # TODO: change to accept url and database for auth_database scenario
-        #if all([args.url, args.database]) or not any([args.url, args.database]):
+        # if all([args.url, args.database]) or not any([args.url, args.database]):
         #    self.arg_parser.error("--url or --database must be used but not both")
 
         self.mongo_url = args.url
@@ -93,13 +93,14 @@ class Configuration(object):
             self.execution = Execution.DOWNGRADE
 
     def _from_ini(self):
-        self.ini_parser = ConfigParser(
-            defaults={'host': self.mongo_host, 'port': self.mongo_port, 'migrations': self.mongo_migrations_path,
-                      'database': self.mongo_database,
-                      'username': self.mongo_username,
-                      'password': self.mongo_password,
-                      'url': self.mongo_url,
-                      'metastore': self.metastore})
+        self.ini_parser = SafeConfigParser(os.environ,
+                                           defaults={'host': self.mongo_host, 'port': self.mongo_port,
+                                                     'migrations': self.mongo_migrations_path,
+                                                     'database': self.mongo_database,
+                                                     'username': self.mongo_username,
+                                                     'password': self.mongo_password,
+                                                     'url': self.mongo_url,
+                                                     'metastore': self.metastore})
 
         try:
             fp = open(self.config_file)
