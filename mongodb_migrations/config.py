@@ -93,14 +93,7 @@ class Configuration(object):
             self.execution = Execution.DOWNGRADE
 
     def _from_ini(self):
-        self.ini_parser = SafeConfigParser(os.environ,
-                                           defaults={'host': self.mongo_host, 'port': self.mongo_port,
-                                                     'migrations': self.mongo_migrations_path,
-                                                     'database': self.mongo_database,
-                                                     'username': self.mongo_username,
-                                                     'password': self.mongo_password,
-                                                     'url': self.mongo_url,
-                                                     'metastore': self.metastore})
+        self.ini_parser = SafeConfigParser(os.environ)
 
         try:
             fp = open(self.config_file)
