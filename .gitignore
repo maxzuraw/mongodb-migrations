@@ -73,3 +73,9 @@ hbvenv/
 ENV/
 env.bak/
 venv.bak/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
