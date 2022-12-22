@@ -1,2 +1,3 @@
 pymongo
 configparser
+python-dotenv
